@@ -48,13 +48,4 @@ tasks.test {
   }
 }
 
-spotless {
-  java {
-    importOrder()
-    removeUnusedImports()
-    googleJavaFormat()
-    formatAnnotations()
-    licenseHeader("/* SPDX-License-Identifier: Apache-2.0 */")
-  }
-  kotlinGradle { ktfmt() }
-}
+

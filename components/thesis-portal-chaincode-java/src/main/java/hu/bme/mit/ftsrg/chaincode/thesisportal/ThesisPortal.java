@@ -24,7 +24,7 @@ import org.tinylog.Logger;
         @Info(
             title = "Thesis Portal",
             description = "Simple chaincode for a thesis portal",
-            version = "0.1.0",
+            version = "0.1.2",
             license = @License(name = "Apache-2.0"),
             contact =
                 @Contact(
@@ -105,6 +105,19 @@ public final class ThesisPortal implements ContractInterface {
     ctx.getStub().putStringState(asset.ID(), serialize(asset));
 
     return asset;
+  }
+
+  @Transaction(name = "CreateAssetNew")
+  public String createAssetNew(
+      Context ctx, String id, String color, int size, String owner, int appraisedValue) {
+
+    MyDto dto = new MyDto();
+    dto.setId("1");
+    dto.setColor("purple");
+
+    String json =  GSON.toJson(dto);
+    ctx.getStub().putStringState("1", json);
+    return json;
   }
 
   @Transaction(name = "ReadAsset", intent = TYPE.EVALUATE)
@@ -192,4 +205,54 @@ public final class ThesisPortal implements ContractInterface {
   private DemoAsset deserialize(final String json) {
     return GSON.fromJson(json, DemoAsset.class);
   }
+
+//----------------------------------------------------------
+
+  @Transaction(name = "CreateThesis")
+  public String createThesis(
+      Context ctx, String id, String studentId, String teacherId) {
+
+    // validation
+
+    Thesis dto = new Thesis();
+    dto.setId(id);
+    dto.setStudentId(studentId);
+    dto.setTeacherId(teacherId);
+
+
+    String json =  GSON.toJson(dto);
+    ctx.getStub().putStringState(id, json);
+    return json;
+  }
+
+  @Transaction(name = "GetAllThesis", intent = TYPE.EVALUATE)
+  public String getAllThesis(Context ctx) {
+    var answer = new ArrayList<String>();
+
+    QueryResultsIterator<KeyValue> results = ctx.getStub().getStateByRange("", "");
+    for (KeyValue result : results) {
+      String thesis = GSON.toJson(result.getStringValue());
+      Logger.info(thesis);
+      answer.add(thesis);
+    }
+
+    return answer.toString();
+  }
+
+  @Transaction(name = "ApproveThesis", intent = TYPE.EVALUATE)
+  public String approveThesis(Context ctx, String thesisId, String teacherId, String approve) {
+    // validate 
+
+    String json = ctx.getStub().getStringState(thesisId);
+    Thesis thesis = GSON.fromJson(json, Thesis.class);
+    thesis.setApproved(Boolean.valueOf(approve));
+
+    String thesisJson = GSON.toJson(thesis);
+
+    ctx.getStub().putStringState(thesisId, thesisJson);
+
+    return thesisJson;
+  }
+
+
 }

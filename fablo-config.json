@@ -78,18 +78,10 @@
     }
   ],
   "chaincodes": [
+   
     {
-      "name": "thesis-portal-chaincode-ts",
-      "version": "1.0.0",
-      "lang": "node",
-      "channel": "thesis-portal-channel",
-      "directory": "./components/thesis-portal-chaincode-ts",
-      "initRequired": false,
-      "endorsement": "OR('UniAMSP.member','UniBMSP.member')"
-    },
-    {
-      "name": "thesis-portal-chaincode-java",
-      "version": "0.1.0",
+      "name": "thesis-portal-chaincode",
+      "version": "0.1.2",
       "lang": "java",
       "channel": "thesis-portal-channel",
       "directory": "./components/thesis-portal-chaincode-java",
